@@ -175,6 +175,22 @@
       }
     });
   }
+ 
+  /* 作業内容入力後　画面リセット */
+  const app = document.getElementById("appContainer");
+  const textarea = document.getElementById("workNote");
+
+  // 作業内容入力開始（キーボード表示）
+  textarea.addEventListener("focus", () => {
+    app.style.position = "absolute";   // 固定を一時解除
+    app.style.top = "0";
+  });
+
+  // 作業内容入力終了（キーボード閉じる）
+  textarea.addEventListener("blur", () => {
+    app.style.position = "fixed";      // 固定を再適用
+    app.style.top = "0";
+  });
 </script>
 
 </body>
