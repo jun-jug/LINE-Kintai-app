@@ -4,12 +4,11 @@
 <meta charset="UTF-8">
 <title>勤怠アプリ</title>
 <style>
-  html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* 画面固定 */
-    touch-action: none;
+    overflow: hidden;        /* ← 基本は固定 */
+    touch-action: pan-y;     /* ← 1本指スクロール禁止、2本指スクロール許可 */
     overscroll-behavior: none;
     font-family: sans-serif;
     background: #f5f5f5;
