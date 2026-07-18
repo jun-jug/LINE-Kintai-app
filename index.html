@@ -14,26 +14,27 @@
     border: none;
     color: #fff;
   }
-  .arrival { background-color: #007bff; }
+  .arrival { background-color: #007bff; opacity: 0.4; } /* 初期はグレー */
+  .arrival.enabled { opacity: 1; }
+
   .leave { background-color: #dc3545; opacity: 0.4; } /* 初期はグレー */
-  .leave.enabled { opacity: 1; } /* 有効化時 */
+  .leave.enabled { opacity: 1; }
 </style>
 </head>
 <body>
 
 <h2>📍 現場名</h2>
-<select id="siteName" style="width:100%; padding:10px; font-size:18px;">
+<select id="siteName" style="width:100%; padding:10px; font-size:18px;" onchange="enableArrival()">
   <option value="">現場を選択</option>
   <option value="工場A">工場A</option>
   <option value="工場B">工場B</option>
   <option value="店舗C">店舗C</option>
-  <!-- 会社側でここに追加していく -->
 </select>
 
 <h3>🕒 現在時刻</h3>
 <div id="nowTime" style="font-size:20px; margin-bottom:20px;"></div>
 
-<button class="btn arrival" onclick="arrival()">現場到着（GPS打刻）</button>
+<button id="arrivalBtn" class="btn arrival" onclick="arrival()" disabled>現場到着（GPS打刻）</button>
 <button id="leaveBtn" class="btn leave" onclick="leave()" disabled>現場退場（GPS打刻）</button>
 
 <h3>📝 作業内容</h3>
@@ -53,9 +54,28 @@
   }
   setInterval(updateTime, 1000);
 
+  // 現場名選択 → 到着ボタンを有効化
+  function enableArrival() {
+    const site = document.getElementById("siteName").value;
+    const arrivalBtn = document.getElementById("arrivalBtn");
+
+    if (site !== "") {
+      arrivalBtn.disabled = false;
+      arrivalBtn.classList.add("enabled");
+    } else {
+      arrivalBtn.disabled = true;
+      arrivalBtn.classList.remove("enabled");
+    }
+  }
+
   // 到着ボタン
   function arrival() {
     getGPS("arrival");
+
+    // 到着ボタンを無効化（グレー）
+    const arrivalBtn = document.getElementById("arrivalBtn");
+    arrivalBtn.disabled = true;
+    arrivalBtn.classList.remove("enabled");
 
     // 退場ボタンを有効化
     const leaveBtn = document.getElementById("leaveBtn");
