@@ -13,7 +13,6 @@
     overscroll-behavior: none;
   }
 
-  /* 固定コンテナ */
   #appContainer {
     position: fixed;
     top: 0;
@@ -105,7 +104,6 @@
 </div>
 
 <script>
-  /* 現在時刻更新 */
   function updateTime() {
     const now = new Date();
     document.getElementById("nowTime").innerText =
@@ -114,7 +112,6 @@
   updateTime();
   setInterval(updateTime, 1000);
 
-  /* 現場名選択 → 到着ボタン有効化 */
   function enableArrival() {
     const site = document.getElementById("siteName").value;
     const arrivalBtn = document.getElementById("arrivalBtn");
@@ -130,7 +127,6 @@
     }
   }
 
-  /* 到着ボタン */
   function arrival() {
     getGPS("arrival");
 
@@ -145,7 +141,6 @@
     leaveBtn.classList.add("enabled");
   }
 
-  /* 退場ボタン */
   function leave() {
     getGPS("leave");
 
@@ -155,7 +150,6 @@
     leaveBtn.classList.remove("enabled");
   }
 
-  /* GPS取得 */
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition(() => {
       if (type === "arrival") {
@@ -166,16 +160,14 @@
     });
   }
 
-  /* ★ 画面せり上がり防止の本命処理 ★ */
-  const app = document.getElementById("appContainer");
+  /* ★ キーボード閉じたら画面を強制リセット ★ */
   const textarea = document.getElementById("workNote");
 
   textarea.addEventListener("blur", () => {
-    // キーボードが閉じた後に画面位置を強制リセット
     setTimeout(() => {
-      window.scrollTo(0, 0);
-      app.style.top = "0px";
-    }, 50);
+      window.scrollTo(0, 0);      // ← 画面位置を強制的に戻す
+      document.body.style.height = "100%";  // ← viewport を再設定
+    }, 100);
   });
 </script>
 
