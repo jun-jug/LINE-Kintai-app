@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>勤怠アプリ</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; }
+  .btn {
+    width: 100%;
+    padding: 20px;
+    margin: 10px 0;
+    font-size: 24px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+  }
+  .arrival { background-color: #007bff; }
+  .leave { background-color: #dc3545; }
+</style>
+</head>
+<body>
+
+<h2>📍 現場名</h2>
+<input id="siteName" type="text" placeholder="現場名を入力" style="width:100%; padding:10px; font-size:18px;">
+
+<h3>🕒 現在時刻</h3>
+<div id="nowTime" style="font-size:20px; margin-bottom:20px;"></div>
+
+<button class="btn arrival" onclick="arrival()">現場到着（GPS打刻）</button>
+<button class="btn leave" onclick="leave()">現場退場（GPS打刻）</button>
+
+<h3>距離判定</h3>
+<div id="distance">距離： --- m</div>
+<div id="judge">判定： ---</div>
+
+<script>
+  // 現在時刻更新
+  function updateTime() {
+    const now = new Date();
+    document.getElementById("nowTime").innerText =
+      now.toLocaleString();
+  }
+  setInterval(updateTime, 1000);
+
+  // 到着ボタン
+  function arrival() {
+    getGPS("arrival");
+  }
+
+  // 退場ボタン
+  function leave() {
+    getGPS("leave");
+  }
+
+  // GPS取得
+  function getGPS(type) {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      // ここに距離判定や保存処理を後で追加する
+      alert(type + "：GPS取得\n緯度：" + lat + "\n経度：" + lng);
+    });
+  }
+</script>
+
+</body>
+</html>
