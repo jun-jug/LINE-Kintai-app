@@ -15,19 +15,30 @@
     color: #fff;
   }
   .arrival { background-color: #007bff; }
-  .leave { background-color: #dc3545; }
+  .leave { background-color: #dc3545; opacity: 0.4; } /* 初期はグレー */
+  .leave.enabled { opacity: 1; } /* 有効化時 */
 </style>
 </head>
 <body>
 
 <h2>📍 現場名</h2>
-<input id="siteName" type="text" placeholder="現場名を入力" style="width:100%; padding:10px; font-size:18px;">
+<select id="siteName" style="width:100%; padding:10px; font-size:18px;">
+  <option value="">現場を選択</option>
+  <option value="工場A">工場A</option>
+  <option value="工場B">工場B</option>
+  <option value="店舗C">店舗C</option>
+  <!-- 会社側でここに追加していく -->
+</select>
 
 <h3>🕒 現在時刻</h3>
 <div id="nowTime" style="font-size:20px; margin-bottom:20px;"></div>
 
 <button class="btn arrival" onclick="arrival()">現場到着（GPS打刻）</button>
-<button class="btn leave" onclick="leave()">現場退場（GPS打刻）</button>
+<button id="leaveBtn" class="btn leave" onclick="leave()" disabled>現場退場（GPS打刻）</button>
+
+<h3>📝 作業内容</h3>
+<textarea id="workNote" placeholder="今日の作業内容を入力" 
+  style="width:100%; height:120px; padding:10px; font-size:18px;"></textarea>
 
 <h3>距離判定</h3>
 <div id="distance">距離： --- m</div>
@@ -45,6 +56,11 @@
   // 到着ボタン
   function arrival() {
     getGPS("arrival");
+
+    // 退場ボタンを有効化
+    const leaveBtn = document.getElementById("leaveBtn");
+    leaveBtn.disabled = false;
+    leaveBtn.classList.add("enabled");
   }
 
   // 退場ボタン
@@ -58,8 +74,9 @@
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
 
-      // ここに距離判定や保存処理を後で追加する
       alert(type + "：GPS取得\n緯度：" + lat + "\n経度：" + lng);
+
+      // ここに距離判定や保存処理を後で追加する
     });
   }
 </script>
