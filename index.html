@@ -8,14 +8,13 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* ← スクロール禁止（固定の代わり） */
+    overflow: hidden; /* 画面固定 */
     touch-action: none;
     overscroll-behavior: none;
     font-family: sans-serif;
     background: #f5f5f5;
   }
 
-  /* 固定に見えるが fixed を使わない */
   #appContainer {
     width: 100%;
     height: 100%;
@@ -31,7 +30,7 @@
     margin-bottom: 20px;
   }
 
-  select, textarea {
+  select {
     width: 85%;
     padding: 30px;
     font-size: 34px;
@@ -41,15 +40,23 @@
     box-sizing: border-box;
   }
 
+  /* 作業内容欄を半分の高さに */
   textarea {
-    height: 350px;
+    width: 85%;
+    height: 180px; /* ←半分にした */
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
+  /* ボタン1つだけ */
   .btn {
     width: 85%;
-    padding: 60px;
+    padding: 50px;
     margin: 26px auto;
     font-size: 40px;
     border-radius: 26px;
@@ -59,9 +66,9 @@
     box-sizing: border-box;
   }
 
-  .arrival.enabled { background-color: #007bff; }
-  .leave.enabled   { background-color: #dc3545; }
-  .disabled {
+  .btn.arrival { background-color: #007bff; } /* 青：到着 */
+  .btn.leave   { background-color: #dc3545; } /* 赤：退場 */
+  .btn.disabled {
     background-color: #cccccc !important;
     color: #666 !important;
   }
@@ -77,7 +84,7 @@
 <div id="appContainer">
 
   <h2>📍 現場名</h2>
-  <select id="siteName" onchange="enableArrival()">
+  <select id="siteName" onchange="updateButtonState()">
     <option value="">現場を選択</option>
     <option value="工場A">工場A</option>
     <option value="工場B">工場B</option>
@@ -87,12 +94,9 @@
   <h3>🕒 現在時刻</h3>
   <div id="nowTime"></div>
 
-  <button id="arrivalBtn" class="btn arrival disabled" onclick="arrival()" disabled>
-    現場到着（GPS打刻）
-  </button>
-
-  <button id="leaveBtn" class="btn leave disabled" onclick="leave()" disabled>
-    現場退場（GPS打刻）
+  <!-- ボタンは1つだけ -->
+  <button id="mainBtn" class="btn disabled" onclick="handleMainButton()" disabled>
+    到着（GPS打刻）
   </button>
 
   <h3>📝 作業内容</h3>
@@ -101,6 +105,7 @@
 </div>
 
 <script>
+  /* 現在時刻更新 */
   function updateTime() {
     const now = new Date();
     document.getElementById("nowTime").innerText =
@@ -109,44 +114,47 @@
   updateTime();
   setInterval(updateTime, 1000);
 
-  function enableArrival() {
-    const site = document.getElementById("siteName").value;
-    const arrivalBtn = document.getElementById("arrivalBtn");
+  let arrived = false; // 状態管理
 
-    if (site !== "") {
-      arrivalBtn.disabled = false;
-      arrivalBtn.classList.remove("disabled");
-      arrivalBtn.classList.add("enabled");
-    } else {
-      arrivalBtn.disabled = true;
-      arrivalBtn.classList.add("disabled");
-      arrivalBtn.classList.remove("enabled");
+  /* 現場選択 → ボタン有効化 */
+  function updateButtonState() {
+    const site = document.getElementById("siteName").value;
+    const btn = document.getElementById("mainBtn");
+
+    if (site !== "" && !arrived) {
+      btn.disabled = false;
+      btn.classList.remove("disabled");
+      btn.classList.add("arrival");
+      btn.innerText = "到着（GPS打刻）";
     }
   }
 
-  function arrival() {
-    getGPS("arrival");
+  /* ボタン押した時の動き */
+  function handleMainButton() {
+    const btn = document.getElementById("mainBtn");
 
-    const arrivalBtn = document.getElementById("arrivalBtn");
-    arrivalBtn.disabled = true;
-    arrivalBtn.classList.add("disabled");
-    arrivalBtn.classList.remove("enabled");
+    if (!arrived) {
+      // 到着処理
+      getGPS("arrival");
+      arrived = true;
 
-    const leaveBtn = document.getElementById("leaveBtn");
-    leaveBtn.disabled = false;
-    leaveBtn.classList.remove("disabled");
-    leaveBtn.classList.add("enabled");
+      btn.classList.remove("arrival");
+      btn.classList.add("leave");
+      btn.innerText = "退場（GPS打刻）";
+
+    } else {
+      // 退場処理
+      getGPS("leave");
+      arrived = false;
+
+      btn.classList.remove("leave");
+      btn.classList.add("disabled");
+      btn.innerText = "到着（GPS打刻）";
+      btn.disabled = true;
+    }
   }
 
-  function leave() {
-    getGPS("leave");
-
-    const leaveBtn = document.getElementById("leaveBtn");
-    leaveBtn.disabled = true;
-    leaveBtn.classList.add("disabled");
-    leaveBtn.classList.remove("enabled");
-  }
-
+  /* GPS取得 */
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition(() => {
       if (type === "arrival") {
@@ -157,12 +165,11 @@
     });
   }
 
-  /* ★ iPhoneでも画面が戻る処理（機種依存なし） */
+  /* textarea フォーカス解除 → 画面位置リセット */
   const textarea = document.getElementById("workNote");
-
   textarea.addEventListener("blur", () => {
     setTimeout(() => {
-      window.scrollTo(0, 0);  // ← 画面位置を強制リセット
+      window.scrollTo(0, 0);
     }, 100);
   });
 </script>
