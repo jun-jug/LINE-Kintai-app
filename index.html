@@ -101,6 +101,12 @@
   // 退場ボタン
   function leave() {
     getGPS("leave");
+
+    // 退場ボタンも押したらグレー化
+    const leaveBtn = document.getElementById("leaveBtn");
+    leaveBtn.disabled = true;
+    leaveBtn.classList.add("disabled");
+    leaveBtn.classList.remove("enabled");
   }
 
   // GPS取得
