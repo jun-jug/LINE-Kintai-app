@@ -6,36 +6,38 @@
 <style>
   body {
     font-family: sans-serif;
-    padding: 20px;
     margin: 0;
+    padding: 20px;
     background: #f5f5f5;
-    font-size: 20px; /* スマホ向けに大きめ */
+    font-size: 22px; /* さらに大きく */
+    height: 100vh;   /* 画面固定 */
+    overflow: hidden; /* スクロール禁止 */
   }
 
   h2, h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
+    font-size: 24px;
+    margin-bottom: 12px;
   }
 
   select, textarea {
     width: 100%;
-    padding: 14px;
-    font-size: 20px;
-    border-radius: 10px;
+    padding: 18px;
+    font-size: 22px;
+    border-radius: 12px;
     border: 1px solid #ccc;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   textarea {
-    height: 140px;
+    height: 160px; /* 高さUP */
   }
 
   .btn {
     width: 100%;
-    padding: 22px;
-    margin: 12px 0;
-    font-size: 24px;
-    border-radius: 12px;
+    padding: 26px; /* ボタンの縦を大きく */
+    margin: 14px 0;
+    font-size: 26px; /* ボタン文字も大きく */
+    border-radius: 14px;
     border: none;
     color: #fff;
   }
@@ -51,8 +53,8 @@
   }
 
   #nowTime {
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 24px;
+    margin-bottom: 24px;
   }
 </style>
 </head>
@@ -109,13 +111,11 @@
   function arrival() {
     getGPS("arrival");
 
-    // 到着ボタンをグレー化
     const arrivalBtn = document.getElementById("arrivalBtn");
     arrivalBtn.disabled = true;
     arrivalBtn.classList.add("disabled");
     arrivalBtn.classList.remove("enabled");
 
-    // 退場ボタンを有効化
     const leaveBtn = document.getElementById("leaveBtn");
     leaveBtn.disabled = false;
     leaveBtn.classList.remove("disabled");
@@ -126,7 +126,6 @@
   function leave() {
     getGPS("leave");
 
-    // 退場ボタンも押したらグレー化
     const leaveBtn = document.getElementById("leaveBtn");
     leaveBtn.disabled = true;
     leaveBtn.classList.add("disabled");
@@ -136,15 +135,11 @@
   // GPS取得
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition(() => {
-
-      // メッセージだけ表示（座標は出さない）
       if (type === "arrival") {
         alert("今日もご安全に！");
       } else {
         alert("一日お疲れさまでした！");
       }
-
-      // ここに距離判定や保存処理を後で追加する
     });
   }
 </script>
