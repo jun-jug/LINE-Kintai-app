@@ -169,6 +169,26 @@
       document.body.style.height = "100%";  // ← viewport を再設定
     }, 100);
   });
+
+  const textarea = document.getElementById("workNote");
+  const app = document.getElementById("appContainer");
+
+  textarea.addEventListener("blur", () => {
+
+    // 少し待たないと iPhone が viewport を戻さない
+    setTimeout(() => {
+
+      // ① 現在の画面高さを再取得（iPhoneでも正しい値になる）
+      const h = window.innerHeight;
+
+      // ② 固定コンテナの高さを強制的に再設定
+      app.style.height = h + "px";
+
+      // ③ 画面位置を強制的に戻す
+      window.scrollTo(0, 0);
+
+    }, 150); // ← iPhoneは100〜200ms必要
+  });
 </script>
 
 </body>
