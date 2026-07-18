@@ -9,42 +9,44 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;  /* スクロール禁止 */
-    position: fixed;   /* 画面固定 */
+    overflow: hidden;        /* スクロール禁止 */
+    position: fixed;         /* 画面固定 */
+    touch-action: none;      /* ダブルフリック禁止（2本指スクロール封印） */
+    overscroll-behavior: none; /* 画面の揺れ防止 */
   }
 
   body {
     font-family: sans-serif;
-    padding: 24px;
+    padding: 24px 40px 24px 24px; /* 右側の余白を増やす */
     background: #f5f5f5;
-    font-size: 26px; /* 大きめフォント */
+    font-size: 34px; /* 全体をさらに大きく */
   }
 
   h2, h3 {
-    font-size: 28px;
-    margin-bottom: 16px;
+    font-size: 36px;
+    margin-bottom: 20px;
   }
 
   select, textarea {
     width: 100%;
-    padding: 22px;
-    font-size: 26px;
-    border-radius: 14px;
+    padding: 30px;
+    font-size: 34px;
+    border-radius: 20px;
     border: 1px solid #ccc;
-    margin-bottom: 28px;
+    margin-bottom: 40px;
     box-sizing: border-box;
   }
 
   textarea {
-    height: 200px; /* 作業内容欄を大きく */
+    height: 350px; /* 2.5倍に拡大 */
   }
 
   .btn {
     width: 100%;
-    padding: 34px;       /* ボタン縦をかなり大きく */
-    margin: 18px 0;
-    font-size: 32px;     /* ボタン文字も大きく */
-    border-radius: 18px;
+    padding: 60px; /* ボタン縦を2.5倍に拡大 */
+    margin: 26px 0;
+    font-size: 40px; /* ボタン文字も巨大化 */
+    border-radius: 26px;
     border: none;
     color: #fff;
     box-sizing: border-box;
@@ -61,8 +63,8 @@
   }
 
   #nowTime {
-    font-size: 28px;
-    margin-bottom: 28px;
+    font-size: 36px;
+    margin-bottom: 30px;
   }
 </style>
 </head>
@@ -74,7 +76,6 @@
   <option value="工場A">工場A</option>
   <option value="工場B">工場B</option>
   <option value="店舗C">店舗C</option>
-  <!-- 会社側でここに現場を追加していく -->
 </select>
 
 <h3>🕒 現在時刻</h3>
@@ -142,7 +143,7 @@
     leaveBtn.classList.remove("enabled");
   }
 
-  // GPS取得（位置情報許可はブラウザ側の仕様）
+  // GPS取得
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition(() => {
       if (type === "arrival") {
@@ -150,7 +151,6 @@
       } else {
         alert("一日お疲れさまでした！");
       }
-      // このあとに距離判定・保存処理を追加していける
     });
   }
 </script>
