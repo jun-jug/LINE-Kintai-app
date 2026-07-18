@@ -11,15 +11,16 @@
     padding: 0;
     overflow: hidden;        /* スクロール禁止 */
     position: fixed;         /* 画面固定 */
-    touch-action: none;      /* ダブルフリック禁止（2本指スクロール封印） */
-    overscroll-behavior: none; /* 画面の揺れ防止 */
+    touch-action: none;      /* ダブルフリック禁止 */
+    overscroll-behavior: none;
   }
 
   body {
     font-family: sans-serif;
-    padding: 24px 40px 24px 24px; /* 右側の余白を増やす */
+    padding: 24px;
     background: #f5f5f5;
-    font-size: 34px; /* 全体をさらに大きく */
+    font-size: 34px;
+    text-align: center; /* 中央寄せ */
   }
 
   h2, h3 {
@@ -28,7 +29,7 @@
   }
 
   select, textarea {
-    width: 100%;
+    width: 85%;              /* ←幅を縮める */
     padding: 30px;
     font-size: 34px;
     border-radius: 20px;
@@ -38,25 +39,24 @@
   }
 
   textarea {
-    height: 350px; /* 2.5倍に拡大 */
+    height: 350px;
   }
 
   .btn {
-    width: 100%;
-    padding: 60px; /* ボタン縦を2.5倍に拡大 */
-    margin: 26px 0;
-    font-size: 40px; /* ボタン文字も巨大化 */
+    width: 85%;              /* ←ボタン幅を縮める */
+    padding: 60px;
+    margin: 26px auto;       /* ←中央寄せ */
+    font-size: 40px;
     border-radius: 26px;
     border: none;
     color: #fff;
     box-sizing: border-box;
+    display: block;          /* 中央寄せのため */
   }
 
-  /* 有効時の色 */
   .arrival.enabled { background-color: #007bff; }
   .leave.enabled   { background-color: #dc3545; }
 
-  /* 無効時の色（完全グレー） */
   .disabled {
     background-color: #cccccc !important;
     color: #666 !important;
@@ -93,7 +93,6 @@
 <textarea id="workNote" placeholder="今日の作業内容を入力"></textarea>
 
 <script>
-  // 現在時刻更新
   function updateTime() {
     const now = new Date();
     document.getElementById("nowTime").innerText =
@@ -102,7 +101,6 @@
   updateTime();
   setInterval(updateTime, 1000);
 
-  // 現場名選択 → 到着ボタンを有効化
   function enableArrival() {
     const site = document.getElementById("siteName").value;
     const arrivalBtn = document.getElementById("arrivalBtn");
@@ -118,7 +116,6 @@
     }
   }
 
-  // 到着ボタン
   function arrival() {
     getGPS("arrival");
 
@@ -133,7 +130,6 @@
     leaveBtn.classList.add("enabled");
   }
 
-  // 退場ボタン
   function leave() {
     getGPS("leave");
 
@@ -143,7 +139,6 @@
     leaveBtn.classList.remove("enabled");
   }
 
-  // GPS取得
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition(() => {
       if (type === "arrival") {
