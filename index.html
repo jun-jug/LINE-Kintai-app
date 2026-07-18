@@ -4,47 +4,55 @@
 <meta charset="UTF-8">
 <title>勤怠アプリ</title>
 <style>
+  html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;  /* スクロール禁止 */
+    position: fixed;   /* 画面固定 */
+  }
+
   body {
     font-family: sans-serif;
-    margin: 0;
-    padding: 20px;
+    padding: 24px;
     background: #f5f5f5;
-    font-size: 22px; /* さらに大きく */
-    height: 100vh;   /* 画面固定 */
-    overflow: hidden; /* スクロール禁止 */
+    font-size: 26px; /* 大きめフォント */
   }
 
   h2, h3 {
-    font-size: 24px;
-    margin-bottom: 12px;
+    font-size: 28px;
+    margin-bottom: 16px;
   }
 
   select, textarea {
     width: 100%;
-    padding: 18px;
-    font-size: 22px;
-    border-radius: 12px;
+    padding: 22px;
+    font-size: 26px;
+    border-radius: 14px;
     border: 1px solid #ccc;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    box-sizing: border-box;
   }
 
   textarea {
-    height: 160px; /* 高さUP */
+    height: 200px; /* 作業内容欄を大きく */
   }
 
   .btn {
     width: 100%;
-    padding: 26px; /* ボタンの縦を大きく */
-    margin: 14px 0;
-    font-size: 26px; /* ボタン文字も大きく */
-    border-radius: 14px;
+    padding: 34px;       /* ボタン縦をかなり大きく */
+    margin: 18px 0;
+    font-size: 32px;     /* ボタン文字も大きく */
+    border-radius: 18px;
     border: none;
     color: #fff;
+    box-sizing: border-box;
   }
 
   /* 有効時の色 */
   .arrival.enabled { background-color: #007bff; }
-  .leave.enabled { background-color: #dc3545; }
+  .leave.enabled   { background-color: #dc3545; }
 
   /* 無効時の色（完全グレー） */
   .disabled {
@@ -53,8 +61,8 @@
   }
 
   #nowTime {
-    font-size: 24px;
-    margin-bottom: 24px;
+    font-size: 28px;
+    margin-bottom: 28px;
   }
 </style>
 </head>
@@ -66,6 +74,7 @@
   <option value="工場A">工場A</option>
   <option value="工場B">工場B</option>
   <option value="店舗C">店舗C</option>
+  <!-- 会社側でここに現場を追加していく -->
 </select>
 
 <h3>🕒 現在時刻</h3>
@@ -89,6 +98,7 @@
     document.getElementById("nowTime").innerText =
       now.toLocaleString();
   }
+  updateTime();
   setInterval(updateTime, 1000);
 
   // 現場名選択 → 到着ボタンを有効化
@@ -132,7 +142,7 @@
     leaveBtn.classList.remove("enabled");
   }
 
-  // GPS取得
+  // GPS取得（位置情報許可はブラウザ側の仕様）
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition(() => {
       if (type === "arrival") {
@@ -140,6 +150,7 @@
       } else {
         alert("一日お疲れさまでした！");
       }
+      // このあとに距離判定・保存処理を追加していける
     });
   }
 </script>
