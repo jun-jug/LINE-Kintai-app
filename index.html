@@ -5,6 +5,7 @@
 <title>勤怠アプリ</title>
 <style>
   body { font-family: sans-serif; padding: 20px; }
+
   .btn {
     width: 100%;
     padding: 20px;
@@ -14,11 +15,16 @@
     border: none;
     color: #fff;
   }
-  .arrival { background-color: #007bff; opacity: 0.4; } /* 初期はグレー */
-  .arrival.enabled { opacity: 1; }
 
-  .leave { background-color: #dc3545; opacity: 0.4; } /* 初期はグレー */
-  .leave.enabled { opacity: 1; }
+  /* 有効時の色 */
+  .arrival.enabled { background-color: #007bff; }
+  .leave.enabled { background-color: #dc3545; }
+
+  /* 無効時の色（完全グレー） */
+  .disabled {
+    background-color: #cccccc !important;
+    color: #666 !important;
+  }
 </style>
 </head>
 <body>
@@ -34,8 +40,13 @@
 <h3>🕒 現在時刻</h3>
 <div id="nowTime" style="font-size:20px; margin-bottom:20px;"></div>
 
-<button id="arrivalBtn" class="btn arrival" onclick="arrival()" disabled>現場到着（GPS打刻）</button>
-<button id="leaveBtn" class="btn leave" onclick="leave()" disabled>現場退場（GPS打刻）</button>
+<button id="arrivalBtn" class="btn arrival disabled" onclick="arrival()" disabled>
+  現場到着（GPS打刻）
+</button>
+
+<button id="leaveBtn" class="btn leave disabled" onclick="leave()" disabled>
+  現場退場（GPS打刻）
+</button>
 
 <h3>📝 作業内容</h3>
 <textarea id="workNote" placeholder="今日の作業内容を入力" 
@@ -61,9 +72,11 @@
 
     if (site !== "") {
       arrivalBtn.disabled = false;
+      arrivalBtn.classList.remove("disabled");
       arrivalBtn.classList.add("enabled");
     } else {
       arrivalBtn.disabled = true;
+      arrivalBtn.classList.add("disabled");
       arrivalBtn.classList.remove("enabled");
     }
   }
@@ -72,14 +85,16 @@
   function arrival() {
     getGPS("arrival");
 
-    // 到着ボタンを無効化（グレー）
+    // 到着ボタンをグレー化
     const arrivalBtn = document.getElementById("arrivalBtn");
     arrivalBtn.disabled = true;
+    arrivalBtn.classList.add("disabled");
     arrivalBtn.classList.remove("enabled");
 
     // 退場ボタンを有効化
     const leaveBtn = document.getElementById("leaveBtn");
     leaveBtn.disabled = false;
+    leaveBtn.classList.remove("disabled");
     leaveBtn.classList.add("enabled");
   }
 
@@ -91,10 +106,13 @@
   // GPS取得
   function getGPS(type) {
     navigator.geolocation.getCurrentPosition((pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
 
-      alert(type + "：GPS取得\n緯度：" + lat + "\n経度：" + lng);
+      // メッセージだけ表示（座標は出さない）
+      if (type === "arrival") {
+        alert("今日もご安全に！");
+      } else {
+        alert("一日お疲れさまでした！");
+      }
 
       // ここに距離判定や保存処理を後で追加する
     });
